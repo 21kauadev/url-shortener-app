@@ -35,7 +35,6 @@ public class TokenService {
                 .build()
                 .verify(token)
                 .getSubject();
-
     }
 
     private Instant genExpirationInstant() {
