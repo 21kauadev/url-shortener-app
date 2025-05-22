@@ -4,12 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kauadev.url_shortener_app.domain.user.LoginDTO;
 import com.kauadev.url_shortener_app.domain.user.User;
 import com.kauadev.url_shortener_app.domain.user.UserDTO;
 import com.kauadev.url_shortener_app.domain.user.exceptions.UserAlreadyExists;
@@ -46,6 +49,22 @@ public class AuthenticationController {
         user.setEmail(data.email());
 
         ApiResponse<User> response = new ApiResponse<User>(HttpStatus.OK.value(), true, "Usuário cadastrado.", user);
+
+        return ResponseEntity.ok().body(response);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse<String>> login(@RequestBody LoginDTO data) {
+
+        UsernamePasswordAuthenticationToken usernamePassword = new UsernamePasswordAuthenticationToken(data.username(),
+                data.password());
+        Authentication auth = authenticationManager.authenticate(usernamePassword);
+
+        User user = (User) auth.getPrincipal();
+        String token = tokenService.generateToken(user);
+
+        ApiResponse<String> response = new ApiResponse<String>(HttpStatus.OK.value(), true, "Usuário autenticado.",
+                token);
 
         return ResponseEntity.ok().body(response);
     }
