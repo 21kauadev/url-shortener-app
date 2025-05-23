@@ -48,6 +48,8 @@ public class AuthenticationController {
         user.setRole(data.role());
         user.setEmail(data.email());
 
+        userRepository.save(user);
+
         ApiResponse<User> response = new ApiResponse<User>(HttpStatus.OK.value(), true, "Usuário cadastrado.", user);
 
         return ResponseEntity.ok().body(response);
@@ -68,5 +70,4 @@ public class AuthenticationController {
 
         return ResponseEntity.ok().body(response);
     }
-
 }
