@@ -44,8 +44,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                         user.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-            filterChain.doFilter(request, response);
 
+            filterChain.doFilter(request, response);
         } catch (Exception e) {
             resolver.resolveException(request, response, null, e);
         }
