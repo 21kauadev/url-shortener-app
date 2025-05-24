@@ -11,6 +11,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.kauadev.url_shortener_app.domain.user.exceptions.MissingAuthentication;
 import com.kauadev.url_shortener_app.domain.user.exceptions.UserNotFoundException;
 
 @ControllerAdvice
@@ -21,6 +22,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         RestErrorMessage threatedError = new RestErrorMessage(HttpStatus.NOT_FOUND.value(), exception.getMessage());
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(threatedError);
+    }
+
+    @ExceptionHandler({ MissingAuthentication.class })
+    private ResponseEntity<RestErrorMessage> userNotFoundHandler(MissingAuthentication exception) {
+        RestErrorMessage threatedError = new RestErrorMessage(HttpStatus.UNAUTHORIZED.value(), exception.getMessage());
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(threatedError);
     }
 
     @ExceptionHandler({ JWTCreationException.class })
