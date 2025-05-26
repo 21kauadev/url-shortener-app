@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
-import com.kauadev.url_shortener_app.domain.user.exceptions.MissingAuthentication;
 import com.kauadev.url_shortener_app.repositories.UserRepository;
 
 import jakarta.servlet.FilterChain;
@@ -44,8 +43,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 Authentication authentication = new UsernamePasswordAuthenticationToken(user, null,
                         user.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-            } else {
-                throw new MissingAuthentication();
             }
 
             filterChain.doFilter(request, response);
