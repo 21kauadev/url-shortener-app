@@ -20,4 +20,17 @@ public class LinkService {
         return links;
     }
 
+    // public Link shorten(String url) {
+    // // com base na url recebida,
+    // // gerar um shortCode, que seria a url curta a passar na url da applicaçao
+    // // a logica de interceptaçao e redirecionamento da url é com uso do traefik
+
+    // // processo:
+    // // vou salvar a entidade Link
+    // // pegar o id dela
+    // // com base no id, gerar um shortCode (que será salvo posteriormente em Link)
+    // // gerar a url curta e retornar a url original e a curta
+
+    // }
+
 }
