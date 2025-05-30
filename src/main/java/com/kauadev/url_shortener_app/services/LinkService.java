@@ -1,5 +1,6 @@
 package com.kauadev.url_shortener_app.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.kauadev.url_shortener_app.domain.link.Link;
 import com.kauadev.url_shortener_app.domain.link.LinkResponse;
+import com.kauadev.url_shortener_app.domain.link.exceptions.ExpiredLinkException;
 import com.kauadev.url_shortener_app.domain.user.User;
 import com.kauadev.url_shortener_app.repositories.LinkRepository;
 
@@ -17,6 +19,8 @@ public class LinkService {
 
     @Autowired
     private LinkRepository linkRepository;
+
+    private static final String baseUrl = "http://localhost:8080/link/";
 
     public List<Link> getAllLinks() {
         List<Link> links = linkRepository.findAll();
@@ -44,10 +48,28 @@ public class LinkService {
         savedLink.setShortCode(shortCode);
         linkRepository.save(savedLink);
 
-        String shortUrl = "http://localhost:8080/" + shortCode;
+        String shortUrl = baseUrl + shortCode;
         LinkResponse linkResponse = new LinkResponse(url, shortUrl);
 
         return linkResponse;
+    }
+
+    public Link redirectToOriginaLUrl(String shortCode) {
+        System.out.println("tamo aqui.");
+        Link foundLink = linkRepository.findByShortCode(shortCode);
+
+        // verifica se expirou
+        if (foundLink.getExpiresAt().isBefore(LocalDateTime.now())) {
+            throw new ExpiredLinkException();
+        }
+
+        // incrementando a contagem de cliques
+        Integer clickCount = foundLink.getClickCount();
+        foundLink.setClickCount(clickCount + 1);
+
+        linkRepository.save(foundLink);
+
+        return foundLink;
     }
 
 }

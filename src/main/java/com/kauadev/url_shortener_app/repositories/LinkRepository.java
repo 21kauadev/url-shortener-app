@@ -7,5 +7,7 @@ import com.kauadev.url_shortener_app.domain.link.Link;
 
 @Repository
 public interface LinkRepository extends JpaRepository<Link, Long> {
+    // pra encontrar um link pelo seu shortCode, codigo da url encurtada.
+    Link findByShortCode(String shortCode);
 
 }

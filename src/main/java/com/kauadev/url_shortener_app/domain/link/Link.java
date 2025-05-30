@@ -90,4 +90,5 @@ public class Link {
     public void setClickCount(Integer clickCount) {
         this.clickCount = clickCount;
     }
+
 }
